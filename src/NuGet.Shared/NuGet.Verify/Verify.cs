@@ -3,7 +3,7 @@
 
 using System;
 
-namespace NuGet.VisualStudio.Common
+namespace NuGet
 {
     /// <summary> Argument verification helpers. </summary>
     internal static class Verify

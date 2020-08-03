@@ -233,9 +233,18 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuGet.VisualStudio.OnlineEn
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NuGet.VisualStudio.Internal.Contracts", "src\NuGet.Clients\NuGet.VisualStudio.Internal.Contracts\NuGet.VisualStudio.Internal.Contracts.csproj", "{DEEBF1A1-1C21-4E9E-8CE3-1EB21381FF1E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NuGet.VisualStudio.Contracts", "src\NuGet.Clients\NuGet.VisualStudio.Contracts\NuGet.VisualStudio.Contracts.csproj", "{6AF72BEE-70F0-48B2-BD63-0E80D9747342}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NuGet.VisualStudio.Contracts", "src\NuGet.Clients\NuGet.VisualStudio.Contracts\NuGet.VisualStudio.Contracts.csproj", "{6AF72BEE-70F0-48B2-BD63-0E80D9747342}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NuGet.Shared.Test", "test\NuGet.Shared.Test\NuGet.Shared.Test.csproj", "{3E3A5838-D5BF-423C-AD83-9A439837D63E}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "NuGet.Verify", "src\NuGet.Shared\NuGet.Verify\NuGet.Verify.shproj", "{6A5DA967-6C88-4355-A2E6-DCD0B19B71F5}"
 EndProject
 Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		src\NuGet.Shared\NuGet.Verify\NuGet.Verify.projitems*{3e3a5838-d5bf-423c-ad83-9a439837d63e}*SharedItemsImports = 5
+		src\NuGet.Shared\NuGet.Verify\NuGet.Verify.projitems*{6a5da967-6c88-4355-a2e6-dcd0b19b71f5}*SharedItemsImports = 13
+		src\NuGet.Shared\NuGet.Verify\NuGet.Verify.projitems*{eea49a74-6efc-410e-9745-bad367ac151d}*SharedItemsImports = 5
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -569,6 +578,10 @@ Global
 		{6AF72BEE-70F0-48B2-BD63-0E80D9747342}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6AF72BEE-70F0-48B2-BD63-0E80D9747342}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6AF72BEE-70F0-48B2-BD63-0E80D9747342}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E3A5838-D5BF-423C-AD83-9A439837D63E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E3A5838-D5BF-423C-AD83-9A439837D63E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E3A5838-D5BF-423C-AD83-9A439837D63E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E3A5838-D5BF-423C-AD83-9A439837D63E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -666,6 +679,8 @@ Global
 		{290DB64D-74BA-45C5-BAC0-6E31A8AFD5CB} = {08F523EC-3C2A-4A00-A54C-2E54C5AC856B}
 		{DEEBF1A1-1C21-4E9E-8CE3-1EB21381FF1E} = {08F523EC-3C2A-4A00-A54C-2E54C5AC856B}
 		{6AF72BEE-70F0-48B2-BD63-0E80D9747342} = {08F523EC-3C2A-4A00-A54C-2E54C5AC856B}
+		{3E3A5838-D5BF-423C-AD83-9A439837D63E} = {D1549653-9631-4E16-9967-55427174A0DC}
+		{6A5DA967-6C88-4355-A2E6-DCD0B19B71F5} = {DE23D071-162F-47A3-BC68-42E4A354835C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3747A66A-00D1-41B8-A9C5-ED0D7BEA9D25}
