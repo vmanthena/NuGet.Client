@@ -23,6 +23,8 @@
     <ProjectReference Include="..\NuGet.Versioning\NuGet.Versioning.csproj" />
   </ItemGroup>
 
+  <Import Project="$(NuGetSharedSrcDirectory)NuGet.Equality\NuGet.Equality.projitems" Label="Shared" />
+  
   <Import Project="$(BuildCommonDirectory)common.targets"/>
   <Import Project="Sdk.targets" Sdk="Microsoft.NET.Sdk" />
 </Project>

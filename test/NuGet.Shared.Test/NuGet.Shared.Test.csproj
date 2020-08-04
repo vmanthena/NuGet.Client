@@ -12,6 +12,7 @@
     <None Include="xunit.runner.json" />
   </ItemGroup>
 
+  <Import Project="$(NuGetSharedSrcDirectory)NuGet.Equality\NuGet.Equality.projitems" Label="Shared" />
   <Import Project="$(NuGetSharedSrcDirectory)NuGet.Verify\NuGet.Verify.projitems" Label="Shared" />
 
   <Import Project="$(BuildCommonDirectory)common.targets" />

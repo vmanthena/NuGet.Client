@@ -33,6 +33,8 @@
     <ProjectReference Include="$(NuGetCoreSrcDirectory)NuGet.Versioning\NuGet.Versioning.csproj" />
   </ItemGroup>
 
+  <Import Project="$(NuGetSharedSrcDirectory)NuGet.Equality\NuGet.Equality.projitems" Label="Shared" />
+
   <ItemGroup Condition=" '$(IsDesktop)' == 'true' ">
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />

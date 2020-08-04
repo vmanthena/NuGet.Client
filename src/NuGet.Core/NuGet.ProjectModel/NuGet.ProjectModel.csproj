@@ -26,6 +26,8 @@
     <ProjectReference Include="..\NuGet.DependencyResolver.Core\NuGet.DependencyResolver.Core.csproj" />
   </ItemGroup>
 
+  <Import Project="$(NuGetSharedSrcDirectory)NuGet.Equality\NuGet.Equality.projitems" Label="Shared" />
+
   <ItemGroup>
     <Compile Update="Strings.Designer.cs">
       <DesignTime>True</DesignTime>

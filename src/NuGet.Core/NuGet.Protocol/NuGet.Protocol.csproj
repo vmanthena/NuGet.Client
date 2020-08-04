@@ -28,6 +28,8 @@
     <ProjectReference Include="$(NuGetCoreSrcDirectory)NuGet.Packaging\NuGet.Packaging.csproj" />
   </ItemGroup>
 
+  <Import Project="$(NuGetSharedSrcDirectory)NuGet.Equality\NuGet.Equality.projitems" Label="Shared" />
+
   <ItemGroup>
     <Compile Update="Strings.Designer.cs">
       <DesignTime>True</DesignTime>

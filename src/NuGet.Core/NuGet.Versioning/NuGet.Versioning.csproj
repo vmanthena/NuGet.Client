@@ -18,6 +18,8 @@
     <TargetFramework>$(NETFXTargetFramework)</TargetFramework>
   </PropertyGroup>
 
+  <Import Project="$(NuGetSharedSrcDirectory)NuGet.Equality\NuGet.Equality.projitems" Label="Shared" />
+
   <ItemGroup>
     <Compile Update="Resources.Designer.cs">
       <DesignTime>True</DesignTime>

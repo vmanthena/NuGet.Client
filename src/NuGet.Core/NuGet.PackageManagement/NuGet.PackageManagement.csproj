@@ -1,4 +1,4 @@
-﻿<Project>
+<Project>
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), 'README.md'))\build\common.props" />
   <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
 
@@ -15,7 +15,9 @@
     <ProjectReference Include="..\NuGet.Commands\NuGet.Commands.csproj" />
     <ProjectReference Include="..\NuGet.Resolver\NuGet.Resolver.csproj" />
   </ItemGroup>
-  
+
+  <Import Project="$(NuGetSharedSrcDirectory)NuGet.Equality\NuGet.Equality.projitems" Label="Shared" />
+
   <ItemGroup>
     <PackageReference Include="Microsoft.Web.Xdt" />
   </ItemGroup>

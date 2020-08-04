@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="14.0" DefaultTargets="Build">
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), 'README.md'))\build\common.legacy.props" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
@@ -68,6 +68,7 @@
       <Private>False</Private>
     </Reference>
   </ItemGroup>
+  <Import Project="$(NuGetSharedSrcDirectory)NuGet.Equality\NuGet.Equality.projitems" Label="Shared" />
   <ItemGroup>
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="PackageFeeds\RecommenderPackageFeed.cs" />
@@ -283,9 +284,6 @@
   <ItemGroup>
     <Compile Include="$(SharedDirectory)\HashCodeCombiner.cs">
       <Link>HashCodeCombiner.cs</Link>
-    </Compile>
-    <Compile Include="$(SharedDirectory)\EqualityUtility.cs">
-      <Link>EqualityUtility.cs</Link>
     </Compile>
   </ItemGroup>
   <ItemGroup>
