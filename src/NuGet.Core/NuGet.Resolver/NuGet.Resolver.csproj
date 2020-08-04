@@ -25,7 +25,9 @@
   <ItemGroup>
     <ProjectReference Include="..\NuGet.Protocol\NuGet.Protocol.csproj" />
   </ItemGroup>
-  
+
+  <Import Project="$(NuGetSharedSrcDirectory)NuGet.HashCodeCombiner\NuGet.HashCodeCombiner.projitems" Label="Shared" />
+
   <ItemGroup>
     <Compile Update="Strings.Designer.cs">
       <DesignTime>True</DesignTime>

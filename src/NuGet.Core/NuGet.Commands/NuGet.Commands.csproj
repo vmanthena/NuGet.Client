@@ -1,4 +1,4 @@
-<Project>
+﻿<Project>
   <PropertyGroup>
     <RequiresSigningXplatAPIs>true</RequiresSigningXplatAPIs>
   </PropertyGroup>
@@ -35,6 +35,7 @@
   </ItemGroup>
 
   <Import Project="$(NuGetSharedSrcDirectory)NuGet.Equality\NuGet.Equality.projitems" Label="Shared" />
+  <Import Project="$(NuGetSharedSrcDirectory)NuGet.HashCodeCombiner\NuGet.HashCodeCombiner.projitems" Label="Shared" />
 
   <ItemGroup Condition=" '$(TargetFramework)' == '$(NETFXTargetFramework)' ">
     <Reference Include="System.Xml" />

@@ -1,4 +1,4 @@
-﻿<Project>
+<Project>
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), 'README.md'))\build\common.props" />
   <Import Project="Sdk.props" Sdk="Microsoft.NET.Sdk" />
 
@@ -25,6 +25,8 @@
     <DefineConstants>$(DefineConstants);IS_DESKTOP;IS_NET40_CLIENT</DefineConstants>
   </PropertyGroup>
 
+  <Import Project="$(NuGetSharedSrcDirectory)NuGet.HashCodeCombiner\NuGet.HashCodeCombiner.projitems" Label="Shared" />
+  
   <ItemGroup>
     <Compile Update="Strings.Designer.cs">
       <DesignTime>True</DesignTime>

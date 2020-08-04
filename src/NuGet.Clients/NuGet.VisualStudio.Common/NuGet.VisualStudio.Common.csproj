@@ -60,6 +60,7 @@
   <ItemGroup>
     <ProjectReference Include="$(NuGetCoreSrcDirectory)NuGet.PackageManagement\NuGet.PackageManagement.csproj" />
   </ItemGroup>
+  <Import Project="$(NuGetSharedSrcDirectory)NuGet.HashCodeCombiner\NuGet.HashCodeCombiner.projitems" Label="Shared" />
   <Import Project="$(NuGetSharedSrcDirectory)NuGet.Verify\NuGet.Verify.projitems" Label="Shared" />
   <ItemGroup>
     <Compile Update="Resources.Designer.cs">

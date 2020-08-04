@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <Import Project="$(NuGetSharedSrcDirectory)NuGet.Equality\NuGet.Equality.projitems" Label="Shared" />
+  <Import Project="$(NuGetSharedSrcDirectory)NuGet.HashCodeCombiner\NuGet.HashCodeCombiner.projitems" Label="Shared" />
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Web.Xdt" />

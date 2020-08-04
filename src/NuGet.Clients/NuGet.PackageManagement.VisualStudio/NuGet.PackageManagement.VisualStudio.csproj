@@ -69,6 +69,7 @@
     </Reference>
   </ItemGroup>
   <Import Project="$(NuGetSharedSrcDirectory)NuGet.Equality\NuGet.Equality.projitems" Label="Shared" />
+  <Import Project="$(NuGetSharedSrcDirectory)NuGet.HashCodeCombiner\NuGet.HashCodeCombiner.projitems" Label="Shared" />
   <ItemGroup>
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="PackageFeeds\RecommenderPackageFeed.cs" />
@@ -280,11 +281,6 @@
       <Project>{24e62ab7-64e4-4975-9417-883559d1bc19}</Project>
       <Name>NuGet.Versioning</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="$(SharedDirectory)\HashCodeCombiner.cs">
-      <Link>HashCodeCombiner.cs</Link>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <!-- This causes a NU5104 warning. When upgrading to a stable version of this package, remove the above no warn. -->
