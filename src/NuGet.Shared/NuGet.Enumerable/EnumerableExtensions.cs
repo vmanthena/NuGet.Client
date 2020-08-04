@@ -29,7 +29,7 @@ namespace NuGet.Shared
         /// Return the ISet as a HashSet of T, copying if required. Optimized for common case where it is a HashSet of T.
         /// Avoid mutating the return value.
         /// </summary>
-        public static HashSet<T> AsHashSet<T>(this ISet<T> enumerable, IEqualityComparer<T> comparer = null)
+        public static HashSet<T> AsHashSet<T>(this IEnumerable<T> enumerable, IEqualityComparer<T> comparer = null)
         {
             if (enumerable == null)
             {

@@ -87,11 +87,14 @@
       <Aliases>CoreV2</Aliases>
     </Reference>
   </ItemGroup>
+  
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Setup.Configuration.Interop" />
     <ProjectReference Include="$(NuGetCoreSrcDirectory)NuGet.PackageManagement\NuGet.PackageManagement.csproj" />
     <ProjectReference Include="$(NuGetCoreSrcDirectory)NuGet.Build.Tasks\NuGet.Build.Tasks.csproj" />
   </ItemGroup>
+
+  <Import Project="$(NuGetSharedSrcDirectory)NuGet.Enumerable\NuGet.Enumerable.projitems" Label="Shared" />  
 
   <ItemGroup>
     <EmbeddedResource Update="NuGetCommand.resx">

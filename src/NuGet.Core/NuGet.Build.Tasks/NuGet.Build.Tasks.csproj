@@ -60,6 +60,8 @@
     <PackageReference Include="System.Threading.Tasks.Dataflow" />
   </ItemGroup>
   
+  <Import Project="$(NuGetSharedSrcDirectory)NuGet.Enumerable\NuGet.Enumerable.projitems" Label="Shared" />  
+
   <ItemGroup>
     <Compile Update="Strings.Designer.cs">
       <DesignTime>True</DesignTime>

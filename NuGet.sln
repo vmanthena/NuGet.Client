@@ -243,30 +243,40 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "NuGet.Equality", "src\NuGet
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "NuGet.HashCodeCombiner", "src\NuGet.Shared\NuGet.HashCodeCombiner\NuGet.HashCodeCombiner.shproj", "{06D1016B-2852-4C54-85DE-B81C04A8E9B4}"
 EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "NuGet.Enumerable", "src\NuGet.Shared\NuGet.Enumerable\NuGet.Enumerable.shproj", "{2E3D7B04-9662-45A2-ACC0-EDC2B9D58E79}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		src\NuGet.Shared\NuGet.Equality\NuGet.Equality.projitems*{020f4c88-3a5c-4b89-9868-089e867cc223}*SharedItemsImports = 5
 		src\NuGet.Shared\NuGet.HashCodeCombiner\NuGet.HashCodeCombiner.projitems*{020f4c88-3a5c-4b89-9868-089e867cc223}*SharedItemsImports = 5
+		src\NuGet.Shared\NuGet.Enumerable\NuGet.Enumerable.projitems*{06662133-1292-4918-90f3-36c930c0b16f}*SharedItemsImports = 4
 		src\NuGet.Shared\NuGet.HashCodeCombiner\NuGet.HashCodeCombiner.projitems*{06d1016b-2852-4c54-85de-b81c04a8e9b4}*SharedItemsImports = 13
 		src\NuGet.Shared\NuGet.Equality\NuGet.Equality.projitems*{13883e8e-7de1-4edd-8e4a-c5357ba8cd81}*SharedItemsImports = 5
 		src\NuGet.Shared\NuGet.HashCodeCombiner\NuGet.HashCodeCombiner.projitems*{13883e8e-7de1-4edd-8e4a-c5357ba8cd81}*SharedItemsImports = 5
 		src\NuGet.Shared\NuGet.Equality\NuGet.Equality.projitems*{24e62ab7-64e4-4975-9417-883559d1bc19}*SharedItemsImports = 5
 		src\NuGet.Shared\NuGet.HashCodeCombiner\NuGet.HashCodeCombiner.projitems*{24e62ab7-64e4-4975-9417-883559d1bc19}*SharedItemsImports = 5
+		src\NuGet.Shared\NuGet.Enumerable\NuGet.Enumerable.projitems*{2e3d7b04-9662-45a2-acc0-edc2b9d58e79}*SharedItemsImports = 13
 		src\NuGet.Shared\NuGet.Equality\NuGet.Equality.projitems*{306cddfa-ff0b-4299-930c-9ec6c9308160}*SharedItemsImports = 4
 		src\NuGet.Shared\NuGet.HashCodeCombiner\NuGet.HashCodeCombiner.projitems*{306cddfa-ff0b-4299-930c-9ec6c9308160}*SharedItemsImports = 4
+		src\NuGet.Shared\NuGet.Enumerable\NuGet.Enumerable.projitems*{394aeb96-493c-4839-a5ac-8d93cd2fad40}*SharedItemsImports = 5
 		src\NuGet.Shared\NuGet.Equality\NuGet.Equality.projitems*{394aeb96-493c-4839-a5ac-8d93cd2fad40}*SharedItemsImports = 5
 		src\NuGet.Shared\NuGet.HashCodeCombiner\NuGet.HashCodeCombiner.projitems*{394aeb96-493c-4839-a5ac-8d93cd2fad40}*SharedItemsImports = 5
 		src\NuGet.Shared\NuGet.Equality\NuGet.Equality.projitems*{3e3a5838-d5bf-423c-ad83-9a439837d63e}*SharedItemsImports = 5
 		src\NuGet.Shared\NuGet.Verify\NuGet.Verify.projitems*{3e3a5838-d5bf-423c-ad83-9a439837d63e}*SharedItemsImports = 5
 		src\NuGet.Shared\NuGet.HashCodeCombiner\NuGet.HashCodeCombiner.projitems*{51aa27a9-b8b4-458f-9211-e6889b441573}*SharedItemsImports = 5
+		src\NuGet.Shared\NuGet.Enumerable\NuGet.Enumerable.projitems*{567e8582-0e73-4a34-a7d3-ed9486415523}*SharedItemsImports = 5
 		src\NuGet.Shared\NuGet.Equality\NuGet.Equality.projitems*{567e8582-0e73-4a34-a7d3-ed9486415523}*SharedItemsImports = 5
 		src\NuGet.Shared\NuGet.HashCodeCombiner\NuGet.HashCodeCombiner.projitems*{567e8582-0e73-4a34-a7d3-ed9486415523}*SharedItemsImports = 5
 		src\NuGet.Shared\NuGet.Verify\NuGet.Verify.projitems*{6a5da967-6c88-4355-a2e6-dcd0b19b71f5}*SharedItemsImports = 13
+		src\NuGet.Shared\NuGet.Enumerable\NuGet.Enumerable.projitems*{957c4e99-3644-47dd-8f9a-ae36f41ebe4a}*SharedItemsImports = 5
 		src\NuGet.Shared\NuGet.HashCodeCombiner\NuGet.HashCodeCombiner.projitems*{9a9a9f26-597a-4fa6-a4f1-415063484d9c}*SharedItemsImports = 5
+		src\NuGet.Shared\NuGet.Enumerable\NuGet.Enumerable.projitems*{bd6bbc90-60be-4e7d-8458-91e9cda66abe}*SharedItemsImports = 5
 		src\NuGet.Shared\NuGet.Equality\NuGet.Equality.projitems*{bd6bbc90-60be-4e7d-8458-91e9cda66abe}*SharedItemsImports = 5
 		src\NuGet.Shared\NuGet.HashCodeCombiner\NuGet.HashCodeCombiner.projitems*{bd6bbc90-60be-4e7d-8458-91e9cda66abe}*SharedItemsImports = 5
 		src\NuGet.Shared\NuGet.Equality\NuGet.Equality.projitems*{ca6ed1a4-367a-44c7-bbc9-b0ba5f0c2777}*SharedItemsImports = 13
+		src\NuGet.Shared\NuGet.Enumerable\NuGet.Enumerable.projitems*{cf8e1753-ee98-410f-bb4b-6624b19c6b64}*SharedItemsImports = 5
 		src\NuGet.Shared\NuGet.HashCodeCombiner\NuGet.HashCodeCombiner.projitems*{cf8e1753-ee98-410f-bb4b-6624b19c6b64}*SharedItemsImports = 5
+		src\NuGet.Shared\NuGet.Enumerable\NuGet.Enumerable.projitems*{e09441b8-8d74-4a96-8431-480e2065f844}*SharedItemsImports = 5
 		src\NuGet.Shared\NuGet.Equality\NuGet.Equality.projitems*{e3ef26e1-80a7-4573-b3a4-1d4b0042616e}*SharedItemsImports = 5
 		src\NuGet.Shared\NuGet.HashCodeCombiner\NuGet.HashCodeCombiner.projitems*{e3ef26e1-80a7-4573-b3a4-1d4b0042616e}*SharedItemsImports = 5
 		src\NuGet.Shared\NuGet.HashCodeCombiner\NuGet.HashCodeCombiner.projitems*{eea49a74-6efc-410e-9745-bad367ac151d}*SharedItemsImports = 5
@@ -713,6 +723,7 @@ Global
 		{F5DF8335-327C-4861-9D50-E5D927AE61A9} = {BD1946CE-5544-4F28-A04A-9C3D51113E1A}
 		{CA6ED1A4-367A-44C7-BBC9-B0BA5F0C2777} = {F5DF8335-327C-4861-9D50-E5D927AE61A9}
 		{06D1016B-2852-4C54-85DE-B81C04A8E9B4} = {F5DF8335-327C-4861-9D50-E5D927AE61A9}
+		{2E3D7B04-9662-45A2-ACC0-EDC2B9D58E79} = {F5DF8335-327C-4861-9D50-E5D927AE61A9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3747A66A-00D1-41B8-A9C5-ED0D7BEA9D25}
