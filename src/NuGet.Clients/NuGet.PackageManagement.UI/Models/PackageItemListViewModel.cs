@@ -237,10 +237,11 @@ namespace NuGet.PackageManagement.UI
                     OnPropertyChanged(nameof(IsUpdateAvailable));
                     OnPropertyChanged(nameof(IsUninstallable));
                     OnPropertyChanged(nameof(IsNotInstalled));
+                    OnPropertyChanged(nameof(HasPendingBackgroundWork));
                 }
             }
         }
-       
+
         // If the values that help calculate this property change, make sure you raise OnPropertyChanged for IsNotInstalled
         // in all those properties.
         public bool IsNotInstalled
@@ -393,7 +394,7 @@ namespace NuGet.PackageManagement.UI
         public int TaskCount
         {
             get { return _taskCount; }
-            set
+            private set
             {
                 _taskCount = value;
                 OnPropertyChanged(nameof(HasPendingBackgroundWork));
@@ -435,7 +436,7 @@ namespace NuGet.PackageManagement.UI
             }
         }
 
-        private async System.Threading.Tasks.Task ReloadPackageVersionsAsync()
+        public async System.Threading.Tasks.Task ReloadPackageVersionsAsync()
         {
             IncrementTask();
             var result = await _backgroundLatestVersionLoader.Value;
@@ -478,7 +479,6 @@ namespace NuGet.PackageManagement.UI
             _backgroundLatestVersionLoader = AsyncLazy.New(
                 async () =>
                 {
-                    await Task.Delay(3000);
                     var packageVersions = await GetVersionsAsync();
 
                     // filter package versions based on allowed versions in packages.config
