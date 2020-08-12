@@ -1,4 +1,4 @@
-﻿// Copyright (c) .NET Foundation. All rights reserved.
+// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
@@ -24,8 +24,8 @@ namespace NuGet.ProjectManagement
         /// Create a PackageReference based on a LibraryDependency.
         /// </summary>
         /// <param name="dependency">Full PackageReference metadata.</param>
-        public BuildIntegratedPackageReference(LibraryDependency dependency, NuGetFramework projectFramework)
-            : base(GetIdentity(dependency),
+        public BuildIntegratedPackageReference(LibraryDependency dependency, NuGetFramework projectFramework, PackageIdentity installedVersion)
+            : base(installedVersion,
                   targetFramework: projectFramework,
                   userInstalled: true,
                   developmentDependency: dependency?.SuppressParent == LibraryIncludeFlags.All,
@@ -38,22 +38,6 @@ namespace NuGet.ProjectManagement
             }
 
             Dependency = dependency;
-        }
-
-        /// <summary>
-        /// Convert range to a PackageIdentity
-        /// </summary>
-        private static PackageIdentity GetIdentity(LibraryDependency dependency)
-        {
-            if (dependency == null)
-            {
-                throw new ArgumentNullException(nameof(dependency));
-            }
-
-            // MinVersion may not exist for ranges such as ( , 2.0.0];
-            var version = dependency.LibraryRange?.VersionRange?.MinVersion ?? new NuGetVersion(0, 0, 0);
-
-            return new PackageIdentity(dependency.Name, version);
         }
 
         /// <summary>

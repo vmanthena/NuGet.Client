@@ -362,7 +362,7 @@ NuGet.ProjectManagement.BuildIntegratedInstallationContext.SuppressParent.get ->
 NuGet.ProjectManagement.BuildIntegratedInstallationContext.SuppressParent.set -> void
 NuGet.ProjectManagement.BuildIntegratedInstallationContext.UnsuccessfulFrameworks.get -> System.Collections.Generic.IEnumerable<NuGet.Frameworks.NuGetFramework>
 NuGet.ProjectManagement.BuildIntegratedPackageReference
-NuGet.ProjectManagement.BuildIntegratedPackageReference.BuildIntegratedPackageReference(NuGet.LibraryModel.LibraryDependency dependency, NuGet.Frameworks.NuGetFramework projectFramework) -> void
+NuGet.ProjectManagement.BuildIntegratedPackageReference.BuildIntegratedPackageReference(NuGet.LibraryModel.LibraryDependency dependency, NuGet.Frameworks.NuGetFramework projectFramework, NuGet.Packaging.Core.PackageIdentity installedVersion) -> void
 NuGet.ProjectManagement.BuildIntegratedPackageReference.Dependency.get -> NuGet.LibraryModel.LibraryDependency
 NuGet.ProjectManagement.BuildIntegratedProjectUtility
 NuGet.ProjectManagement.CollectionsUtility

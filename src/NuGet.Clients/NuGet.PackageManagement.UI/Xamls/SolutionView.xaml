@@ -16,7 +16,9 @@
       <local:TooltipConverter
         x:Key="TooltipConverter" />
       <local:NotNullToBooleanConverter
-        x:Key="NotNullToBooleanConverter" />  
+        x:Key="NotNullToBooleanConverter" />
+      <local:BooleanToWidthConverter
+        x:Key="BooleanToWidthConverter" />
       <ControlTemplate
         x:Key="SeparatorControlTemplate">
         <Separator
@@ -290,7 +292,7 @@
               Focusable="True"
               IsTabStop="True"
               FocusVisualStyle="{DynamicResource ControlsFocusVisualStyle}"/>
-            
+
             <GridViewColumn.CellTemplate>
               <DataTemplate>
                 <StackPanel Orientation="Horizontal">
@@ -304,10 +306,31 @@
               </DataTemplate>
             </GridViewColumn.CellTemplate>
           </GridViewColumn>
-
+          
+          <!-- the requested version column -->
+          <GridViewColumn
+            DisplayMemberBinding="{Binding RequestedVersion}"
+            Width="{Binding IsRequestedVisible, Converter={StaticResource BooleanToWidthConverter}}">
+            <GridViewColumn.Header>
+              <GridViewColumnHeader
+                AutomationProperties.Name="{x:Static local:Resources.ColumnHeader_RequestedVersion}"
+                x:Name="_requestedVersionColumnHeader"
+                Click="ColumnHeader_Clicked"
+                Content="{x:Static local:Resources.ColumnHeader_RequestedVersion}"
+                local:SortableColumnHeaderAttachedProperties.SortPropertyName="RequestedVersion"
+                HorizontalContentAlignment="Left"
+                SizeChanged="SortableColumnHeader_SizeChanged"
+                PreviewKeyUp="SortableColumnHeader_PreviewKeyUp"
+                Focusable="True"
+                IsTabStop="True"
+                Visibility="{Binding IsRequestedVisible, Converter={StaticResource BooleanToVisibilityConverter}}"
+                FocusVisualStyle="{DynamicResource ControlsFocusVisualStyle}"/>
+            </GridViewColumn.Header>
+          </GridViewColumn>
+          
           <!-- the version column -->
           <GridViewColumn
-            DisplayMemberBinding="{Binding InstalledVersion,Converter={StaticResource VersionToStringConverter}}">
+            DisplayMemberBinding="{Binding InstalledVersion, Converter={StaticResource VersionToStringConverter}}">
             <GridViewColumn.Header>
               <GridViewColumnHeader
                 AutomationProperties.Name="{x:Static local:Resources.ColumnHeader_Version}"

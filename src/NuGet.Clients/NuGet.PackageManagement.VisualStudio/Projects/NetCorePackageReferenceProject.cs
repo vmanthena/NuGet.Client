@@ -42,6 +42,8 @@ namespace NuGet.PackageManagement.VisualStudio
 
         private readonly IProjectSystemCache _projectSystemCache;
         private readonly UnconfiguredProject _unconfiguredProject;
+        private IEnumerable<PackageReference> _installedPackages;
+        private DateTime _lastTimeAssetsModified;
 
         public NetCorePackageReferenceProject(
             string projectName,
@@ -214,40 +216,82 @@ namespace NuGet.PackageManagement.VisualStudio
 
         #region NuGetProject
 
-        public override Task<IEnumerable<PackageReference>> GetInstalledPackagesAsync(CancellationToken token)
+        public async override Task<IEnumerable<PackageReference>> GetInstalledPackagesAsync(CancellationToken token)
         {
-            PackageReference[] installedPackages;
-
             var packageSpec = GetPackageSpec();
+
             if (packageSpec != null)
             {
-                installedPackages = GetPackageReferences(packageSpec);
+                _installedPackages = await GetPackageReferences(packageSpec);
             }
             else
             {
-                installedPackages = new PackageReference[0];
+                _installedPackages = new PackageReference[0];
             }
 
-            return Task.FromResult<IEnumerable<PackageReference>>(installedPackages);
+            return _installedPackages;
         }
 
-        private static PackageReference[] GetPackageReferences(PackageSpec packageSpec)
+        private async Task<IEnumerable<PackageReference>> GetPackageReferences(PackageSpec packageSpec)
         {
             var frameworkSorter = new NuGetFrameworkSorter();
 
+            var lockFilePath = await GetAssetsFilePathAsync();
+            var fileInfo = new FileInfo(lockFilePath);
+            PackageSpec assetsPackageSpec = default;
+            IList<LockFileTarget> targets = default;
+
+            if (fileInfo.Exists && fileInfo.LastWriteTimeUtc > _lastTimeAssetsModified)
+            {
+                var lockFile = new LockFileFormat().Read(lockFilePath);
+                assetsPackageSpec = lockFile.PackageSpec;
+                targets = lockFile.Targets;
+
+                _lastTimeAssetsModified = fileInfo.LastWriteTimeUtc;
+            }
+
             return packageSpec
-                .TargetFrameworks
-                .SelectMany(f => GetPackageReferences(f.Dependencies, f.FrameworkName))
-                .GroupBy(p => p.PackageIdentity)
-                .Select(g => g.OrderBy(p => p.TargetFramework, frameworkSorter).First())
-                .ToArray();
+               .TargetFrameworks
+               .SelectMany(f => GetPackageReferences(f.Dependencies, f.FrameworkName, assetsPackageSpec, targets))
+               .GroupBy(p => p.PackageIdentity)
+               .Select(g => g.OrderBy(p => p.TargetFramework, frameworkSorter).First())
+               .ToArray();
         }
 
-        private static IEnumerable<PackageReference> GetPackageReferences(IEnumerable<LibraryDependency> libraries, NuGetFramework targetFramework)
+        private static IEnumerable<PackageReference> GetPackageReferences(IEnumerable<LibraryDependency> libraries, NuGetFramework targetFramework, PackageSpec assetsPackageSpec = null, IList<LockFileTarget> targets = null)
         {
+            TargetFrameworkInformation assetsTargetFrameworkInformation = assetsPackageSpec?.TargetFrameworks.First(t => t.FrameworkName == targetFramework);
+
             return libraries
                 .Where(l => l.LibraryRange.TypeConstraint == LibraryDependencyTarget.Package)
-                .Select(l => new BuildIntegratedPackageReference(l, targetFramework));
+                .Select(l => new BuildIntegratedPackageReference(l, targetFramework, GetVersionFromPackageSpec(l, targetFramework, assetsTargetFrameworkInformation, targets)));
+        }
+
+        private static PackageIdentity GetVersionFromPackageSpec(LibraryDependency l, NuGetFramework targetFramework, TargetFrameworkInformation assetsTargetFrameworkInformation, IList<LockFileTarget> targets)
+        {
+            var installedVersion = GetInstalledVersion(l, targetFramework, assetsTargetFrameworkInformation, targets);
+
+            if (installedVersion == null)
+            {
+                return new PackageIdentity(l.Name, l.LibraryRange?.VersionRange?.MinVersion ?? new NuGetVersion(0, 0, 0));
+            }
+
+            return new PackageIdentity(l.Name, installedVersion);
+        }
+
+        private static NuGetVersion GetInstalledVersion(LibraryDependency libraryProjectFile, NuGetFramework targetFramework, TargetFrameworkInformation assetsTargetFrameworkInformation, IList<LockFileTarget> targets)
+        {
+            LibraryDependency libraryAsset = assetsTargetFrameworkInformation?.Dependencies.First(e => e.Name == libraryProjectFile.Name);
+
+            if (libraryAsset == null)
+            {
+                return null;
+            }
+
+            return targets
+                .Where(t => t.TargetFramework.Equals(targetFramework) && string.IsNullOrEmpty(t.RuntimeIdentifier))
+                .SelectMany(l => l?.Libraries)
+                .First(a => a.Name.Equals(libraryAsset.Name, StringComparison.OrdinalIgnoreCase)).Version;
         }
 
         public override async Task<bool> InstallPackageAsync(
