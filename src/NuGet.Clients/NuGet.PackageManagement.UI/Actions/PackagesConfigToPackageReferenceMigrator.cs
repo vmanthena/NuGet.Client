@@ -10,7 +10,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using NuGet.Common;
 using NuGet.PackageManagement.Telemetry;
-using NuGet.PackageManagement.VisualStudio;
 using NuGet.Packaging.Core;
 using NuGet.ProjectManagement;
 using NuGet.ProjectManagement.Projects;
@@ -105,7 +104,7 @@ namespace NuGet.PackageManagement.UI
                     var projectContextInfo = await ProjectContextInfo.CreateAsync(nuGetProject, CancellationToken.None);
                     context.Projects = new[] { projectContextInfo };
                     var nuGetUI = (NuGetUI)uiService;
-                    nuGetUI.Projects = new[] { nuGetProject };
+                    nuGetUI.Projects = new[] { projectContextInfo };
                     nuGetUI.DisplayPreviewWindow = false;
 
                     // 4. Install the requested packages
@@ -159,8 +158,6 @@ namespace NuGet.PackageManagement.UI
 
                         return null;
                     }
-
-
                 }
                 catch (Exception ex)
                 {
@@ -170,7 +167,9 @@ namespace NuGet.PackageManagement.UI
                 }
                 finally
                 {
-                    upgradeInformationTelemetryEvent.SetResult(uiService.Projects, status, packagesCount);
+                    IEnumerable<string> projectIds = await ProjectUtility.GetProjectIdsAsync(uiService.Projects, token);
+
+                    upgradeInformationTelemetryEvent.SetResult(projectIds, status, packagesCount);
                 }
             }
         }

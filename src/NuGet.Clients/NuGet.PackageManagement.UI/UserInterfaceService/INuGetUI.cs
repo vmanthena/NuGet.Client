@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using NuGet.PackageManagement.VisualStudio;
 using NuGet.Packaging.Core;
@@ -10,6 +11,7 @@ using NuGet.ProjectManagement;
 using NuGet.Protocol.Core.Types;
 using NuGet.Resolver;
 using NuGet.VisualStudio;
+using NuGet.VisualStudio.Internal.Contracts;
 
 namespace NuGet.PackageManagement.UI
 {
@@ -23,9 +25,9 @@ namespace NuGet.PackageManagement.UI
 
         bool ShowNuGetUpgradeWindow(NuGetProjectUpgradeWindowModel nuGetProjectUpgradeWindowModel);
 
-        Task UpdateNuGetProjectToPackageRef(IEnumerable<NuGetProject> msBuildProjects);
+        Task UpgradeProjectsToPackageReferenceAsync(IEnumerable<IProjectContextInfo> msBuildProjects);
 
-        bool WarnAboutDotnetDeprecation(IEnumerable<NuGetProject> projects);
+        Task<bool> WarnAboutDotnetDeprecationAsync(IEnumerable<IProjectContextInfo> projects, CancellationToken cancellationToken);
 
         bool PromptForLicenseAcceptance(IEnumerable<PackageLicenseInfo> packages);
 
@@ -66,7 +68,7 @@ namespace NuGet.PackageManagement.UI
         /// <summary>
         /// Target projects
         /// </summary>
-        IEnumerable<NuGetProject> Projects { get; }
+        IEnumerable<IProjectContextInfo> Projects { get; }
 
         /// <summary>
         /// True if the option to preview actions first is checked

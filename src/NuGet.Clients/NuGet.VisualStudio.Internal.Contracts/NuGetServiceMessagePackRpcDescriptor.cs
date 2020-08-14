@@ -26,6 +26,7 @@ namespace NuGet.VisualStudio.Internal.Contracts
                 NuGetVersionFormatter.Instance,
                 PackageIdentityFormatter.Instance,
                 PackageReferenceFormatter.Instance,
+                ProjectActionFormatter.Instance,
                 NuGetFrameworkFormatter.Instance,
                 IProjectContextInfoFormatter.Instance
             };

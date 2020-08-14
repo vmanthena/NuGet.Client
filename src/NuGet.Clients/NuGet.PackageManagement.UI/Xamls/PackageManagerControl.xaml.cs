@@ -151,6 +151,11 @@ namespace NuGet.PackageManagement.UI
             solutionManager.ActionsExecuted += SolutionManager_ActionsExecuted;
             solutionManager.AfterNuGetCacheUpdated += SolutionManager_CacheUpdated;
 
+            if (Model.UIController is NuGetUI nuGetUi)
+            {
+                nuGetUi.ActionsExecuted += OnActionsExecuted;
+            }
+
             Model.Context.SourceProvider.PackageSourceProvider.PackageSourcesChanged += Sources_PackageSourcesChanged;
 
             Unloaded += PackageManagerUnloaded;
@@ -263,8 +268,7 @@ namespace NuGet.PackageManagement.UI
                 }
                 else
                 {
-                    NuGetUIThreadHelper.JoinableTaskFactory.RunAsync(() => RefreshProjectAfterActionAsync(timeSpan, e))
-                        .PostOnFailure(nameof(PackageManagerControl), nameof(SolutionManager_ActionsExecuted));
+                    RefreshProjectAfterAction(timeSpan, e);
                 }
             }
             else
@@ -273,16 +277,49 @@ namespace NuGet.PackageManagement.UI
             }
         }
 
-        private async Task RefreshProjectAfterActionAsync(TimeSpan timeSpan, ActionsExecutedEventArgs e)
+        private void OnActionsExecuted(object sender, IReadOnlyCollection<string> projectIds)
+        {
+            var timeSpan = GetTimeSinceLastRefreshAndRestart();
+            // Do not refresh if the UI is not visible. It will be refreshed later when the loaded event is called.
+            if (IsVisible)
+            {
+                if (Model.IsSolution)
+                {
+                    RefreshWhenNotExecutingAction(RefreshOperationSource.ActionsExecuted, timeSpan);
+                }
+                else
+                {
+                    RefreshProjectAfterAction(timeSpan, projectIds);
+                }
+            }
+            else
+            {
+                EmitRefreshEvent(timeSpan, RefreshOperationSource.ActionsExecuted, RefreshOperationStatus.NoOp);
+            }
+        }
+
+        private void RefreshProjectAfterAction(TimeSpan timeSpan, ActionsExecutedEventArgs e)
         {
             // this is a project package manager, so there is one and only one project.
             var project = Model.Context.Projects.First();
-            var projectName = await project.GetUniqueNameOrNameAsync(CancellationToken.None);
 
-            // TODO: Action needs to return PackageContextInfo
-            // we need refresh when packages are installed into or uninstalled from the project
             if (e.Actions.Any(action =>
-                NuGetProject.GetUniqueNameOrName(action.Project) == projectName))
+                action.Project.GetMetadataOrNull(NuGetProjectMetadataKeys.ProjectId) as string == project.ProjectId))
+            {
+                RefreshWhenNotExecutingAction(RefreshOperationSource.ActionsExecuted, timeSpan);
+            }
+            else
+            {
+                EmitRefreshEvent(timeSpan, RefreshOperationSource.ActionsExecuted, RefreshOperationStatus.NotApplicable);
+            }
+        }
+
+        private void RefreshProjectAfterAction(TimeSpan timeSpan, IReadOnlyCollection<string> projectIds)
+        {
+            // this is a project package manager, so there is one and only one project.
+            var project = Model.Context.Projects.First();
+
+            if (projectIds.Contains(project.ProjectId, StringComparer.OrdinalIgnoreCase))
             {
                 RefreshWhenNotExecutingAction(RefreshOperationSource.ActionsExecuted, timeSpan);
             }
@@ -1394,6 +1431,11 @@ namespace NuGet.PackageManagement.UI
             solutionManager.ActionsExecuted -= SolutionManager_ActionsExecuted;
             solutionManager.AfterNuGetCacheUpdated -= SolutionManager_CacheUpdated;
 
+            if (Model.UIController is NuGetUI nuGetUi)
+            {
+                nuGetUi.ActionsExecuted -= OnActionsExecuted;
+            }
+
             Model.Context.SourceProvider.PackageSourceProvider.PackageSourcesChanged -= Sources_PackageSourcesChanged;
 
             // make sure to cancel currently running load or refresh tasks
@@ -1492,7 +1534,7 @@ namespace NuGet.PackageManagement.UI
             nugetUi.DisplayPreviewWindow = options.ShowPreviewWindow;
             nugetUi.DisplayDeprecatedFrameworkWindow = options.ShowDeprecatedFrameworkWindow;
 
-            // nugetUi.Projects = Model.Context.Projects;
+            nugetUi.Projects = Model.Context.Projects;
             nugetUi.ProjectContext.ActionType = actionType;
         }
 

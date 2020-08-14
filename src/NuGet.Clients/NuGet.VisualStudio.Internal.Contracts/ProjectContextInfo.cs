@@ -23,14 +23,14 @@ namespace NuGet.VisualStudio.Internal.Contracts
         private const string LiveShareUriScheme = "vsls";
         private const string ProjectGuidQueryString = "projectGuid";
 
-        public ProjectContextInfo(string projectUniqueId, ProjectStyle projectStyle, NuGetProjectKind projectKind)
+        public ProjectContextInfo(string projectId, ProjectStyle projectStyle, NuGetProjectKind projectKind)
         {
-            UniqueId = projectUniqueId;
+            ProjectId = projectId;
             ProjectStyle = projectStyle;
             ProjectKind = projectKind;
         }
 
-        public string UniqueId { get; }
+        public string ProjectId { get; }
         public NuGetProjectKind ProjectKind { get; }
         public ProjectStyle ProjectStyle { get; }
 
@@ -40,18 +40,18 @@ namespace NuGet.VisualStudio.Internal.Contracts
             using (var nugetProjectManagerService = await remoteBroker.GetProxyAsync<INuGetProjectManagerService>(NuGetServices.ProjectManagerService, cancellationToken: cancellationToken))
             {
                 Assumes.NotNull(nugetProjectManagerService);
-                return await nugetProjectManagerService.IsProjectUpgradeableAsync(UniqueId, cancellationToken);
+                return await nugetProjectManagerService.IsProjectUpgradeableAsync(ProjectId, cancellationToken);
             }
         }
 
-        public async Task<IEnumerable<PackageReference>> GetInstalledPackagesAsync(CancellationToken cancellationToken)
+        public async ValueTask<IEnumerable<PackageReference>> GetInstalledPackagesAsync(CancellationToken cancellationToken)
         {
             IServiceBroker remoteBroker = await GetRemoteServiceBrokerAsync();
             using (var nugetProjectManagerService = await remoteBroker.GetProxyAsync<INuGetProjectManagerService>(NuGetServices.ProjectManagerService, cancellationToken: cancellationToken))
             {
                 Assumes.NotNull(nugetProjectManagerService);
 
-                return await nugetProjectManagerService.GetInstalledPackagesAsync(new string[] { UniqueId }, cancellationToken);
+                return await nugetProjectManagerService.GetInstalledPackagesAsync(new string[] { ProjectId }, cancellationToken);
             }
         }
 
@@ -62,7 +62,7 @@ namespace NuGet.VisualStudio.Internal.Contracts
             {
                 Assumes.NotNull(nugetProjectManagerService);
 
-                (bool success, object value) = await nugetProjectManagerService.TryGetMetadataAsync(UniqueId, key, cancellationToken);
+                (bool success, object value) = await nugetProjectManagerService.TryGetMetadataAsync(ProjectId, key, cancellationToken);
                 return (success, (T)value);
             }
         }
@@ -74,7 +74,7 @@ namespace NuGet.VisualStudio.Internal.Contracts
             {
                 Assumes.NotNull(nugetProjectManagerService);
 
-                return (T)await nugetProjectManagerService.GetMetadataAsync(UniqueId, key, cancellationToken);
+                return (T)await nugetProjectManagerService.GetMetadataAsync(ProjectId, key, cancellationToken);
             }
         }
 

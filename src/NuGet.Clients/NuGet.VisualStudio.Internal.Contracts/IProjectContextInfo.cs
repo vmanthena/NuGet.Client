@@ -16,11 +16,11 @@ namespace NuGet.VisualStudio.Internal.Contracts
     /// </summary>
     public interface IProjectContextInfo
     {
-        string UniqueId { get; }
+        string ProjectId { get; }
         ProjectStyle ProjectStyle { get; }
         NuGetProjectKind ProjectKind { get; }
         ValueTask<bool> IsUpgradeableAsync(CancellationToken cancellationToken);
-        Task<IEnumerable<PackageReference>> GetInstalledPackagesAsync(CancellationToken cancellationToken);
+        ValueTask<IEnumerable<PackageReference>> GetInstalledPackagesAsync(CancellationToken cancellationToken);
         ValueTask<(bool, T)> TryGetMetadataAsync<T>(string key, CancellationToken cancellationToken);
         ValueTask<T> GetMetadataAsync<T>(string key, CancellationToken cancellationToken);
         ValueTask<string> GetUniqueNameOrNameAsync(CancellationToken cancellationToken);

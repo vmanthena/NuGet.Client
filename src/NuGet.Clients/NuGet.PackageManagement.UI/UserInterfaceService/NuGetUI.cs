@@ -5,7 +5,11 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
+using Microsoft;
+using Microsoft.ServiceHub.Framework;
 using Microsoft.VisualStudio.Shell;
 using NuGet.Common;
 using NuGet.Frameworks;
@@ -17,7 +21,7 @@ using NuGet.ProjectManagement;
 using NuGet.Protocol.Core.Types;
 using NuGet.Resolver;
 using NuGet.VisualStudio;
-
+using NuGet.VisualStudio.Internal.Contracts;
 using Task = System.Threading.Tasks.Task;
 
 namespace NuGet.PackageManagement.UI
@@ -44,16 +48,18 @@ namespace NuGet.PackageManagement.UI
             DependencyBehavior = DependencyBehavior.Lowest;
             RemoveDependencies = false;
             ForceRemove = false;
-            Projects = Enumerable.Empty<NuGetProject>();
+            Projects = Enumerable.Empty<IProjectContextInfo>();
             DisplayPreviewWindow = true;
             DisplayDeprecatedFrameworkWindow = true;
         }
 
-        public bool WarnAboutDotnetDeprecation(IEnumerable<NuGetProject> projects)
+        public async Task<bool> WarnAboutDotnetDeprecationAsync(IEnumerable<IProjectContextInfo> projects, CancellationToken cancellationToken)
         {
             var result = false;
 
-            InvokeOnUIThread(() => { result = WarnAboutDotnetDeprecationImpl(projects); });
+            DeprecatedFrameworkModel dataContext = await DotnetDeprecatedPrompt.GetDeprecatedFrameworkModelAsync(projects, cancellationToken);
+
+            InvokeOnUIThread(() => { result = WarnAboutDotnetDeprecationImpl(dataContext); });
 
             return result;
         }
@@ -72,11 +78,11 @@ namespace NuGet.PackageManagement.UI
             return result;
         }
 
-        private bool WarnAboutDotnetDeprecationImpl(IEnumerable<NuGetProject> projects)
+        private bool WarnAboutDotnetDeprecationImpl(DeprecatedFrameworkModel dataContext)
         {
             var window = new DeprecatedFrameworkWindow(UIContext)
             {
-                DataContext = DotnetDeprecatedPrompt.GetDeprecatedFrameworkModel(projects)
+                DataContext = dataContext
             };
 
             var dialogResult = window.ShowModal();
@@ -126,18 +132,29 @@ namespace NuGet.PackageManagement.UI
             return dialogResult ?? false;
         }
 
-        public async Task UpdateNuGetProjectToPackageRef(IEnumerable<NuGetProject> msBuildProjects)
+        public async Task UpgradeProjectsToPackageReferenceAsync(IEnumerable<IProjectContextInfo> msBuildProjects)
         {
-            var projects = Projects.ToList();
+            List<IProjectContextInfo> projects = Projects.ToList();
 
-            foreach (var project in msBuildProjects)
+            IServiceBroker remoteBroker = await BrokeredServicesUtilities.GetRemoteServiceBrokerAsync();
+
+            using (INuGetProjectManagerService projectManagerService = await remoteBroker.GetProxyAsync<INuGetProjectManagerService>(
+                NuGetServices.ProjectManagerService,
+                cancellationToken: CancellationToken.None))
             {
-                var newProject = await UIContext.SolutionManager.UpgradeProjectToPackageReferenceAsync(project);
+                Assumes.NotNull(projectManagerService);
 
-                if (newProject != null)
+                foreach (IProjectContextInfo project in msBuildProjects)
                 {
-                    projects.Remove(project);
-                    projects.Add(newProject);
+                    IProjectContextInfo newProject = await projectManagerService.UpgradeProjectToPackageReferenceAsync(
+                        project.ProjectId,
+                        CancellationToken.None);
+
+                    if (newProject != null)
+                    {
+                        projects.Remove(project);
+                        projects.Add(newProject);
+                    }
                 }
             }
 
@@ -202,47 +219,19 @@ namespace NuGet.PackageManagement.UI
 
         public INuGetProjectContext ProjectContext => _projectContext;
 
-        public IEnumerable<NuGetProject> Projects
-        {
-            set;
-            get;
-        }
+        public IEnumerable<IProjectContextInfo> Projects { get; set; }
 
-        public bool DisplayPreviewWindow
-        {
-            set;
-            get;
-        }
+        public bool DisplayPreviewWindow { get; set; }
 
-        public bool DisplayDeprecatedFrameworkWindow
-        {
-            set;
-            get;
-        }
+        public bool DisplayDeprecatedFrameworkWindow { get; set; }
 
-        public FileConflictAction FileConflictAction
-        {
-            set;
-            get;
-        }
+        public FileConflictAction FileConflictAction { get; set; }
 
-        public DependencyBehavior DependencyBehavior
-        {
-            set;
-            get;
-        }
+        public DependencyBehavior DependencyBehavior { get; set; }
 
-        public bool RemoveDependencies
-        {
-            set;
-            get;
-        }
+        public bool RemoveDependencies { get; set; }
 
-        public bool ForceRemove
-        {
-            set;
-            get;
-        }
+        public bool ForceRemove { get; set; }
 
         public PackageIdentity SelectedPackage { get; set; }
 
@@ -257,6 +246,13 @@ namespace NuGet.PackageManagement.UI
         public void OnActionsExecuted(IEnumerable<ResolvedAction> actions)
         {
             UIContext.SolutionManager.OnActionsExecuted(actions);
+        }
+
+        internal event EventHandler<IReadOnlyCollection<string>> ActionsExecuted;
+
+        internal void OnActionsExecuted(IReadOnlyCollection<string> projectIds)
+        {
+            ActionsExecuted?.Invoke(this, projectIds);
         }
 
         public IEnumerable<SourceRepository> ActiveSources

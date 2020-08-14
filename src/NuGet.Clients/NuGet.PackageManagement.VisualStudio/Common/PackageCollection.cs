@@ -41,7 +41,7 @@ namespace NuGet.PackageManagement.VisualStudio
         {
             // Read package references from all projects.
             var tasks = projects
-                .Select(project => project.GetInstalledPackagesAsync(cancellationToken));
+                .Select(project => project.GetInstalledPackagesAsync(cancellationToken).AsTask());
             var packageReferences = await Task.WhenAll(tasks);
 
             // Group all package references for an id/version into a single item.

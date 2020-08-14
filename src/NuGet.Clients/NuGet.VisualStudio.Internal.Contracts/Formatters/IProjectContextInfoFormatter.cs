@@ -12,9 +12,9 @@ namespace NuGet.VisualStudio.Internal.Contracts
 {
     internal class IProjectContextInfoFormatter : IMessagePackFormatter<IProjectContextInfo?>
     {
+        private const string ProjectIdPropertyName = "projectid";
         private const string ProjectKindPropertyName = "projectkind";
         private const string ProjectStylePropertyName = "projectstyle";
-        private const string UniqueIdPropertyName = "uniqueid";
 
         internal static readonly IMessagePackFormatter<IProjectContextInfo?> Instance = new IProjectContextInfoFormatter();
 
@@ -36,15 +36,15 @@ namespace NuGet.VisualStudio.Internal.Contracts
             {
                 NuGetProjectKind projectKind = NuGetProjectKind.Unknown;
                 ProjectStyle projectStyle = ProjectStyle.Unknown;
-                string? uniqueId = null;
+                string? projectId = null;
 
                 int propertyCount = reader.ReadMapHeader();
                 for (int propertyIndex = 0; propertyIndex < propertyCount; propertyIndex++)
                 {
                     switch (reader.ReadString())
                     {
-                        case UniqueIdPropertyName:
-                            uniqueId = reader.ReadString();
+                        case ProjectIdPropertyName:
+                            projectId = reader.ReadString();
                             break;
                         case ProjectKindPropertyName:
                             projectKind = options.Resolver.GetFormatter<NuGetProjectKind>().Deserialize(ref reader, options);
@@ -58,9 +58,9 @@ namespace NuGet.VisualStudio.Internal.Contracts
                     }
                 }
 
-                Assumes.NotNull(uniqueId);
+                Assumes.NotNull(projectId);
 
-                return new ProjectContextInfo(uniqueId, projectStyle, projectKind);
+                return new ProjectContextInfo(projectId, projectStyle, projectKind);
             }
             finally
             {
@@ -78,8 +78,8 @@ namespace NuGet.VisualStudio.Internal.Contracts
             }
 
             writer.WriteMapHeader(count: 3);
-            writer.Write(UniqueIdPropertyName);
-            writer.Write(value.UniqueId);
+            writer.Write(ProjectIdPropertyName);
+            writer.Write(value.ProjectId);
             writer.Write(ProjectKindPropertyName);
             options.Resolver.GetFormatter<NuGetProjectKind>().Serialize(ref writer, value.ProjectKind, options);
             writer.Write(ProjectStylePropertyName);

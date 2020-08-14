@@ -140,7 +140,7 @@ namespace NuGet.PackageManagement.UI
 
             NuGetUIThreadHelper.JoinableTaskFactory.RunAsync(async () =>
             {
-                await _model.Context.UIActionEngine.UpgradeNuGetProjectAsync(_model.UIController, null);
+                await _model.Context.UIActionEngine.UpgradeNuGetProjectAsync(_model.UIController, nuGetProject: null);
             });
         }
 

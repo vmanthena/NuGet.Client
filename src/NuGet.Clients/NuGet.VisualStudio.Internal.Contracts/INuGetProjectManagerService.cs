@@ -7,17 +7,43 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using NuGet.PackageManagement;
 using NuGet.Packaging;
+using NuGet.Packaging.Core;
+using NuGet.Resolver;
 
 namespace NuGet.VisualStudio.Internal.Contracts
 {
     public interface INuGetProjectManagerService : IDisposable
     {
-        ValueTask<IReadOnlyCollection<PackageReference>> GetInstalledPackagesAsync(IReadOnlyCollection<string> projectGuids, CancellationToken cancellationToken);
-        ValueTask<object> GetMetadataAsync(string projectGuid, string key, CancellationToken cancellationToken);
-        ValueTask<(bool, object)> TryGetMetadataAsync(string projectGuid, string key, CancellationToken cancellationToken);
-        ValueTask<IProjectContextInfo> GetProjectAsync(string projectGuid, CancellationToken cancellationToken);
+        ValueTask<IReadOnlyCollection<PackageReference>> GetInstalledPackagesAsync(IReadOnlyCollection<string> projectIds, CancellationToken cancellationToken);
+        ValueTask<object> GetMetadataAsync(string projectId, string key, CancellationToken cancellationToken);
+        ValueTask<(bool, object)> TryGetMetadataAsync(string projectId, string key, CancellationToken cancellationToken);
+        ValueTask<IProjectContextInfo> GetProjectAsync(string projectId, CancellationToken cancellationToken);
         ValueTask<IReadOnlyCollection<IProjectContextInfo>> GetProjectsAsync(CancellationToken cancellationToken);
-        ValueTask<bool> IsProjectUpgradeableAsync(string projectGuid, CancellationToken cancellationToken);
+        ValueTask<bool> IsProjectUpgradeableAsync(string projectId, CancellationToken cancellationToken);
+        ValueTask<IReadOnlyCollection<IProjectContextInfo>> GetUpgradeableProjectsAsync(IReadOnlyCollection<string> projectIds, CancellationToken cancellationToken);
+        ValueTask<IProjectContextInfo> UpgradeProjectToPackageReferenceAsync(string projectId, CancellationToken cancellationToken);
+        ValueTask<IReadOnlyCollection<IProjectContextInfo>> GetProjectsWithDeprecatedDotnetFrameworkAsync(CancellationToken cancellationToken);
+
+        ValueTask BeginOperationAsync();
+        ValueTask EndOperationAsync();
+        ValueTask ExecuteActionsAsync(IReadOnlyList<ProjectAction> actions, CancellationToken cancellationToken);
+
+        ValueTask<IReadOnlyList<ProjectAction>> GetInstallActionsAsync(
+            string projectId,
+            PackageIdentity packageIdentity,
+            VersionConstraints versionConstraints,
+            bool includePrelease,
+            DependencyBehavior dependencyBehavior,
+            IReadOnlyList<string> packageSourceNames,
+            CancellationToken cancellationToken);
+
+        ValueTask<IReadOnlyList<ProjectAction>> GetUninstallActionsAsync(
+            string projectId,
+            string packageId,
+            bool removeDependencies,
+            bool forceRemove,
+            CancellationToken cancellationToken);
     }
 }

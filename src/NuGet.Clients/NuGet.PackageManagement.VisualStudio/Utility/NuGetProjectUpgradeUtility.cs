@@ -43,7 +43,7 @@ namespace NuGet.PackageManagement.VisualStudio
                 return false;
             }
 
-            nuGetProject = nuGetProject ?? await GetNuGetProject(envDTEProject);
+            nuGetProject ??= await GetNuGetProject(envDTEProject);
 
             if (nuGetProject == null)
             {

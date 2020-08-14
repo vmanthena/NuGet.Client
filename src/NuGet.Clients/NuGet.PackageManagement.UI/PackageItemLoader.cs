@@ -258,7 +258,7 @@ namespace NuGet.PackageManagement.UI
             if (_packageReferences == null && !_context.IsSolution)
             {
                 var tasks = _context.Projects
-                    .Select(project => project.GetInstalledPackagesAsync(cancellationToken));
+                    .Select(project => project.GetInstalledPackagesAsync(cancellationToken).AsTask());
                 _packageReferences = (await Task.WhenAll(tasks)).SelectMany(p => p).Where(p => p != null);
             }
 

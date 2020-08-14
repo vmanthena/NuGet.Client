@@ -1,9 +1,8 @@
-﻿// Copyright (c) .NET Foundation. All rights reserved.
+// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
 using System.Diagnostics;
-using System.Globalization;
 using Microsoft.VisualStudio.Shell;
 
 namespace NuGet.PackageManagement.UI
@@ -49,8 +48,9 @@ namespace NuGet.PackageManagement.UI
             return (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps);
         }
 
-        private static readonly string[] _scalingFactor = new string[] {
-            String.Empty,
+        private static readonly string[] ScalingFactor = new string[]
+        {
+            string.Empty,
             "K", // kilo
             "M", // mega, million
             "G", // giga, billion
@@ -69,12 +69,12 @@ namespace NuGet.PackageManagement.UI
                 v /= 1000;
                 ++exp;
             }
-            
+
             var s = string.Format(
                 culture,
                 "{0:G3}{1}",
                 v,
-                _scalingFactor[exp]);
+                ScalingFactor[exp]);
             return s;
         }
     }
