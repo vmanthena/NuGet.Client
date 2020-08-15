@@ -10006,6 +10006,54 @@ namespace NuGet.CommandLine.Test
             }
         }
 
+        [PlatformFact(Platform.Windows)]
+        public async Task RestoreNetCore_WithCustomAliasAndPackageWithTargets_WritesConditionWithCorrectAlias()
+        {
+            // Arrange
+            using (var pathContext = new SimpleTestPathContext())
+            {
+                // Set up solution, project, and packages
+                var solution = new SimpleTestSolutionContext(pathContext.SolutionRoot);
+
+                var packageX = new SimpleTestPackageContext()
+                {
+                    Id = "x",
+                    Version = "1.0.0"
+                };
+
+                var projects = new List<SimpleTestProjectContext>();
+
+                var project = SimpleTestProjectContext.CreateNETCoreWithSDK(
+                    "proj",
+                    pathContext.SolutionRoot,
+                    "net5.0-windows",
+                    "net50");
+
+                project.OriginalFrameworkStrings = new List<string> { "net5.0-windows", "net50" };
+
+                project.AddPackageToAllFrameworks(packageX);
+                solution.Projects.Add(project);
+                solution.Create(pathContext.SolutionRoot);
+
+
+                await SimpleTestPackageUtility.CreateFolderFeedV3Async(
+                    pathContext.PackageSource,
+                    PackageSaveMode.Defaultv3,
+                    packageX);
+
+                // Act
+                var r = Util.RestoreSolution(pathContext);
+                Assert.Equal(0, r.Item1);
+                Assert.True(File.Exists(project.PropsOutput), r.Item2);
+                var propsXML = XDocument.Parse(File.ReadAllText(project.PropsOutput));
+
+                var propsItemGroups = propsXML.Root.Elements().Where(e => e.Name.LocalName == "ItemGroup").ToList();
+
+                Assert.Contains("'$(TargetFramework)' == 'net50' AND '$(ExcludeRestorePackageImports)' != 'true'", propsItemGroups[1].Attribute(XName.Get("Condition")).Value.Trim());
+                Assert.Contains("'$(TargetFramework)' == 'net5.0-windows' AND '$(ExcludeRestorePackageImports)' != 'true'", propsItemGroups[2].Attribute(XName.Get("Condition")).Value.Trim());
+            }
+        }
+
         private static byte[] GetTestUtilityResource(string name)
         {
             return ResourceTestUtility.GetResourceBytes(
