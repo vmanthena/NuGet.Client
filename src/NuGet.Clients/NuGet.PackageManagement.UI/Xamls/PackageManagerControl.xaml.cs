@@ -742,7 +742,7 @@ namespace NuGet.PackageManagement.UI
         private void InitSourceRepoList(UserSettings settings)
         {
             // get active source name.
-            string activeSourceName = null;
+            string activeSourceName;
 
             // try saved user settings first.
             if (!string.IsNullOrEmpty(settings?.SourceRepository))
@@ -1574,12 +1574,11 @@ namespace NuGet.PackageManagement.UI
             ExecuteAction(
                 () =>
                 {
-                    return Model.Context.UIActionEngine.PerformActionAsync(
+                    return Model.Context.UIActionEngine.PerformInstallOrUninstallAsync(
                         Model.UIController,
                         action,
                         CancellationToken.None);
                 },
-
                 nugetUi => SetOptions(nugetUi, NuGetActionType.Install));
         }
 
@@ -1590,12 +1589,11 @@ namespace NuGet.PackageManagement.UI
             ExecuteAction(
                 () =>
                 {
-                    return Model.Context.UIActionEngine.PerformActionAsync(
+                    return Model.Context.UIActionEngine.PerformInstallOrUninstallAsync(
                         Model.UIController,
                         action,
                         CancellationToken.None);
                 },
-
                 nugetUi => SetOptions(nugetUi, NuGetActionType.Uninstall));
         }
 

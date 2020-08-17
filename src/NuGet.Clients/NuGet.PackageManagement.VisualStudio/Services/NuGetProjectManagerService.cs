@@ -328,6 +328,95 @@ namespace NuGet.PackageManagement.VisualStudio
             return projectActions;
         }
 
+        public async ValueTask<IReadOnlyList<ProjectAction>> GetUpdateActionsAsync(
+           IReadOnlyCollection<string> projectIds,
+           IReadOnlyCollection<PackageIdentity> packageIdentities,
+           VersionConstraints versionConstraints,
+           bool includePrelease,
+           DependencyBehavior dependencyBehavior,
+           IReadOnlyList<string> packageSourceNames,
+           CancellationToken cancellationToken)
+        {
+            Assumes.NotNullOrEmpty(projectIds);
+            Assumes.NotNullOrEmpty(packageIdentities);
+            Assumes.NotNullOrEmpty(packageSourceNames);
+            Assumes.NotNull(_packageManager);
+            Assumes.NotNull(_sourceCacheContext);
+            Assumes.NotNull(_resolvedActions);
+            Assumes.Null(_packageIdentity);
+
+            var primarySources = new List<SourceRepository>();
+            var secondarySources = new List<SourceRepository>();
+
+            ISourceRepositoryProvider sourceRepositoryProvider = await _sourceRepositoryProvider.GetValueAsync();
+            IEnumerable<SourceRepository> sourceRepositories = sourceRepositoryProvider.GetRepositories();
+            var packageSourceNamesSet = new HashSet<string>(packageSourceNames, StringComparer.OrdinalIgnoreCase);
+
+            foreach (SourceRepository sourceRepository in sourceRepositories)
+            {
+                if (packageSourceNamesSet.Contains(sourceRepository.PackageSource.Name))
+                {
+                    primarySources.Add(sourceRepository);
+                }
+
+                if (sourceRepository.PackageSource.IsEnabled)
+                {
+                    secondarySources.Add(sourceRepository);
+                }
+            }
+
+            INuGetProjectContext projectContext = await ServiceLocator.GetInstanceAsync<INuGetProjectContext>();
+            var projects = new List<NuGetProject>();
+
+            foreach (string projectId in projectIds)
+            {
+                (bool success, NuGetProject? project) = await TryGetNuGetProjectMatchingProjectIdAsync(projectId);
+
+                Assumes.True(success);
+                Assumes.NotNull(project);
+
+                projects.Add(project);
+            }
+
+            var resolutionContext = new ResolutionContext(
+                dependencyBehavior,
+                includePrelease,
+                includeUnlisted: true,
+                versionConstraints,
+                new GatherCache(),
+                _sourceCacheContext);
+
+            IEnumerable<NuGetProjectAction> actions = await _packageManager.PreviewUpdatePackagesAsync(
+                  packageIdentities.ToList(),
+                  projects,
+                  resolutionContext,
+                  projectContext,
+                  primarySources,
+                  secondarySources,
+                  cancellationToken);
+
+            var projectActions = new List<ProjectAction>();
+
+            foreach (NuGetProjectAction action in actions)
+            {
+                string projectId = action.Project.GetMetadata<string>(NuGetProjectMetadataKeys.ProjectId);
+                var resolvedAction = new ResolvedAction(action.Project, action);
+                var projectAction = new ProjectAction(
+                    CreateProjectActionId(),
+                    projectId,
+                    action.PackageIdentity.Id,
+                    action.PackageIdentity.Version.ToString(),
+                    action.NuGetProjectActionType,
+                    implicitActions: null);
+
+                _resolvedActions[projectAction.Id] = resolvedAction;
+
+                projectActions.Add(projectAction);
+            }
+
+            return projectActions;
+        }
+
         public async ValueTask<bool> IsProjectUpgradeableAsync(string projectId, CancellationToken cancellationToken)
         {
             Assumes.NotNullOrEmpty(projectId);
