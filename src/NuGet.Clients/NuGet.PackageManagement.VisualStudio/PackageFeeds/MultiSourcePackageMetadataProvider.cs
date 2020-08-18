@@ -78,7 +78,7 @@ namespace NuGet.PackageManagement.VisualStudio
         public async Task<IPackageSearchMetadata> GetLatestPackageMetadataAsync(
             PackageIdentity identity,
             NuGetProject project,
-            bool includePrerelease, 
+            bool includePrerelease,
             CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -118,7 +118,7 @@ namespace NuGet.PackageManagement.VisualStudio
         {
             cancellationToken.ThrowIfCancellationRequested();
             var tasks = _sourceRepositories
-                .Select(r => GetMetadataTaskSafeAsync(()=> r.GetPackageMetadataListAsync(packageId, includePrerelease, includeUnlisted, cancellationToken)))
+                .Select(r => GetMetadataTaskSafeAsync(() => r.GetPackageMetadataListAsync(packageId, includePrerelease, includeUnlisted, cancellationToken)))
                 .ToArray();
 
             var completed = (await Task.WhenAll(tasks))
@@ -215,7 +215,7 @@ namespace NuGet.PackageManagement.VisualStudio
             return (await MergeVersionsAsync(identity, metadatas), await MergeDeprecationMetadataAsync(identity, metadatas));
         }
 
-        internal async Task<T> GetMetadataTaskSafeAsync<T>(Func<Task<T>> getMetadataTask) where T: class
+        internal async Task<T> GetMetadataTaskSafeAsync<T>(Func<Task<T>> getMetadataTask) where T : class
         {
             try
             {

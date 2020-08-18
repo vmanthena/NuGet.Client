@@ -182,7 +182,7 @@ namespace NuGet.VisualStudio.Implementation.Test.Extensibility
         {
             // Arrange
             var target = new VsFrameworkCompatibility();
-            
+
             // Act
             var actual = target.GetNetStandardFrameworks().ToArray();
 

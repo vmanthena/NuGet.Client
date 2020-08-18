@@ -1741,7 +1741,7 @@ namespace NuGet.Commands.Test
 
             return walker.WalkAsync(range, framework, runtimeIdentifier: null, runtimeGraph: null, recursive: true);
         }
-        
+
         private static DependencyGraphSpec CreateMinimalDependencyGraphSpec(string projectPath, string outputPath)
         {
             var packageSpec = new PackageSpec();

@@ -63,7 +63,7 @@ namespace NuGet.ProjectModel.Test
 
         private TargetFrameworkInformation CreateTargetFrameworkInformation()
         {
-            return CreateTargetFrameworkInformation(new List<CentralPackageVersion>(){ new CentralPackageVersion("foo", VersionRange.All), new CentralPackageVersion("bar", VersionRange.AllStable) });
+            return CreateTargetFrameworkInformation(new List<CentralPackageVersion>() { new CentralPackageVersion("foo", VersionRange.All), new CentralPackageVersion("bar", VersionRange.AllStable) });
         }
 
         private TargetFrameworkInformation CreateTargetFrameworkInformation(List<CentralPackageVersion> centralVersionDependencies)

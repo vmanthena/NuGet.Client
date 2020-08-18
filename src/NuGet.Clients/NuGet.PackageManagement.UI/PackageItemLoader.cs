@@ -310,7 +310,7 @@ namespace NuGet.PackageManagement.UI
                         PrefixReserved = metadata.PrefixReserved && !IsMultiSource,
                         DeprecationMetadata = AsyncLazy.New(metadata.GetDeprecationMetadataAsync),
                         Recommended = index < _recommendedCount,
-                        PackageReader = (metadata as PackageSearchMetadataBuilder.ClonedPackageSearchMetadata) ?.PackageReader,
+                        PackageReader = (metadata as PackageSearchMetadataBuilder.ClonedPackageSearchMetadata)?.PackageReader,
                     };
 
                     listItem.UpdatePackageStatus(_installedPackages);

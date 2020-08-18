@@ -33,7 +33,7 @@ namespace NuGet.ProjectModel
             WarningsAsErrors = new HashSet<NuGetLogCode>();
             NoWarn = new HashSet<NuGetLogCode>();
             AllWarningsAsErrors = false;
-    }
+        }
 
         public WarningProperties(ISet<NuGetLogCode> warningsAsErrors, ISet<NuGetLogCode> noWarn, bool allWarningsAsErrors)
             : base()
