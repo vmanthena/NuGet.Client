@@ -183,6 +183,19 @@ jobs:
       optimizationInputsDropNamePrefix: OptimizationInputs/$(System.TeamProject)/$(Build.Repository.Name)
     condition: "and(succeeded(), eq(variables['BuildRTM'], 'false'), eq(variables['IsOfficialBuild'], 'true'))"
 
+  - task: NuGetCommand@2
+    displayName: "Install dotnet-format"
+    inputs:
+      command: 'custom'
+      arguments: 'install dotnet-format -ConfigFile $(System.DefaultWorkingDirectory)\NuGet.config -OutputDirectory $(System.DefaultWorkingDirectory)\tools'
+
+  - task: PowerShell@1
+    displayName: "Check source file format"
+    inputs:
+      scriptType: "inlineScript"
+      inlineScript: |
+        $(System.DefaultWorkingDirectory)\tools\dotnet-format.exe --check --exclude submodules
+
   - task: MSBuild@1
     displayName: "Restore for VS2019"
     inputs:
